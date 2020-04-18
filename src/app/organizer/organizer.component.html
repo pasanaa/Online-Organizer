@@ -1,0 +1,147 @@
+<mat-toolbar>
+
+    <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+
+    <span>{{title}}</span>
+
+</mat-toolbar>
+
+<div class="mainDiv">
+    <div>
+        <h1 class="center">{{title}}</h1>
+    </div>
+
+    <mat-card>
+
+        <div class="column">
+            <div class="row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Choose Event Date</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]='event.EventDate'>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <div class="error" *ngIf="dateValidator()">
+                        You can't add events to the past.past is past- move on - be happy!
+                    </div>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Event Name</mat-label>
+                    <input matInput placeholder="Event Name" [(ngModel)]='event.EventName'>
+                </mat-form-field>
+
+            </div>
+
+            <div class="row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Event Start Time</mat-label>
+                    <input matInput type="time" placeholder="Event Start Time" [(ngModel)]='event.EventStartTime'>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Event End Time</mat-label>
+                    <input matInput type="time" placeholder="Event End Time" [(ngModel)]='event.EventEndTime'>
+                    <div class="error" *ngIf="endTimeValidator()">
+                        End time Should be ahead from start time!
+                    </div>
+                </mat-form-field>
+
+                <div class="button-row">
+                    <button mat-raised-button color="primary" (click)=AddDetails()
+                        [disabled]="!event.EventDate || !event.EventName || !event.EventStartTime || !event.EventEndTime || endTimeValidator()">
+                        <mat-icon>save</mat-icon>
+                        {{buttonVal}}
+                    </button>
+                </div>
+
+                <br /> <br /> <br /> <br />
+
+                <mat-card class="table_wrapper">
+                    <mat-card-header>
+                        <mat-card-title>Next Event</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p class="nextEvent">
+                            {{latestEvent()}}
+                        </p>
+                        <p>
+                            <countdown-timer class="countdown" [end]="this.remainingTime"></countdown-timer>
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+
+        <br /> <br /> <br />
+
+        <mat-form-field appearance="outline">
+            <mat-label>Search Event</mat-label>
+            <input matInput placeholder="Search By Event Name" [(ngModel)]='event.EventSearch'
+                (ngModelChange)="applyFilter()">
+        </mat-form-field>
+
+        <ul *ngFor="let event of sortData"></ul>
+
+        <div class="table_wrapper">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="eventDate">
+                    <th mat-header-cell *matHeaderCellDef>Event Date &nbsp;</th>
+                    <td mat-cell *matCellDef="let element"> {{element.eventDate | date:'EEEE d MMMM y'}} &nbsp; </td>
+                </ng-container>
+
+                <ng-container matColumnDef="eventName">
+                    <th mat-header-cell *matHeaderCellDef> Event Name &nbsp;</th>
+                    <td mat-cell *matCellDef="let element"> {{element.eventName}} &nbsp;</td>
+                </ng-container>
+
+                <ng-container matColumnDef="eventStartTime">
+                    <th mat-header-cell *matHeaderCellDef> Event Start Time &nbsp;</th>
+                    <td mat-cell *matCellDef="let element"> {{element.eventStartTime}} &nbsp;</td>
+                </ng-container>
+
+                <ng-container matColumnDef="eventEndTime">
+                    <th mat-header-cell *matHeaderCellDef> Event End Time &nbsp;</th>
+                    <td mat-cell *matCellDef="let element"> {{element.eventEndTime}} &nbsp;</td>
+                </ng-container>
+
+                <ng-container matColumnDef="eventId">
+                    <td mat-cell *matCellDef="let element"> {{element.eventId}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="edit">
+                    <th mat-header-cell *matHeaderCellDef> Edit &nbsp;</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-button color="primary" (click)="editRow(element)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="delete">
+                    <th mat-header-cell *matHeaderCellDef> Delete </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-button color="warn" (click)="deleteRow(element)">
+                            <mat-icon>delete_outline</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+            </table>
+        </div>
+
+
+    </mat-card>
+
+
+    <!-- <li>
+            {{event.eventDate | date:'EEEE d MMMM y'}} -- {{event.eventName}} 
+        </li> -->
+
+</div>

@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mainDiv{
+    margin: 2%;
+}
+
+.countdown{
+    font-size:medium;
+    color:rgb(141, 49, 228);
+    font-family:Roboto;
+}
+
+.nextEvent {
+    font-size:large;
+    color:rgb(78, 197, 22);
+}
+
+
+.error {
+    font-size: smaller;
+    color: darkred;
+}
+
+.mat-form-field{
+    width: 100%;
+    text-align:center;   
+}
+
+.row {
+    width: 100%;
+    padding: 10px;
+}
+
+.button-row{
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+table{
+    width: 100%;
+}
+
+.center{
+    text-align: center;
+    color: darkblue;
+}
+
+.table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.mat-form-field-flex > .mat-form-field-infix { padding: 0.3em 0px !important;}
+.mat-form-field-label-wrapper { top: -1.5em; }
+
+.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+   transform: translateY(-1.1em) scale(.75) ;
+}
+
+@media(min-width: 768px){
+    .column {
+        display: flex;
+        padding: 10px;
+        justify-content: space-between;
+        flex: 50%;
+    }
+}
