@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { Event } from 'src/app/organizer/Event';
-import { formatDate, Time } from '@angular/common';
-import { interval, Subscription  } from 'rxjs';
+import { formatDate } from '@angular/common';
+import { interval, Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-organizer',
@@ -20,19 +21,19 @@ export class OrganizerComponent implements OnInit {
       eventName: "Test 1",
       eventStartTime: undefined,
       eventEndTime: undefined,
-    }    
+    }
   ];
   event: Event;
   edit: Boolean;
   buttonVal: string;
-  title : string;
+  title: string;
   latestDate: Date;
-  remainingTime : Date;
+  remainingTime: Date;
   subscription: Subscription;
   index;
 
 
-  constructor() {
+  constructor(private toast: ToastrService) {
     this.buttonVal = "Save";
     this.edit = false;
     this.title = "Online Organizer"
@@ -41,9 +42,8 @@ export class OrganizerComponent implements OnInit {
 
   ngOnInit() {
     this.event = new Event();
-    this.event.EventDate = new Date();
     this.remainingTime = null;
-    const source = interval(30000);
+    const source = interval(10000);
     this.subscription = source.subscribe(val => this.eventExpirer());
   }
 
@@ -59,6 +59,7 @@ export class OrganizerComponent implements OnInit {
       this.EventsGrid[det].eventEndTime = this.event.EventEndTime;
 
       this.edit = false;
+      this.toast.success('Event Succesfully Updated!');
     }
     else {
 
@@ -70,10 +71,9 @@ export class OrganizerComponent implements OnInit {
         eventEndTime: this.event.EventEndTime,
       };
 
-
       this.EventsGrid.push(obj);
       this.dataSource = new MatTableDataSource(this.EventsGrid);
-      // this.toast.Success("Successfully Added!");
+      this.toast.success('Event Succesfully Added!');
     }
 
     if (this.edit == false) {
@@ -96,20 +96,23 @@ export class OrganizerComponent implements OnInit {
     this.event.EventName = row.eventName;
     this.event.EventStartTime = row.eventStartTime;
     this.event.EventEndTime = row.eventEndTime;
+
+    this.toast.info('Event edit mode!');
   }
 
   deleteRow(row) {
     this.index = this.EventsGrid.indexOf(row);
     this.EventsGrid.splice(this.index, 1);
     this.dataSource._updateChangeSubscription();
-    // this.toast.Warning("Successfully Deleted!");
+    this.toast.warning('Event Succesfully Deleted!');
   }
 
   clearFields() {
-    this.event.EventDate = new Date();
+    this.event.EventDate = null;
     this.event.EventName = "";
     this.event.EventStartTime = null;
     this.event.EventEndTime = null;
+    this.dataSource = new MatTableDataSource(this.EventsGrid);
   }
 
 
@@ -125,13 +128,13 @@ export class OrganizerComponent implements OnInit {
     });
   }
 
-  latestEvent() {  
-    if(this.EventsGrid.length > 0) {
+  latestEvent() {
+    if (this.EventsGrid.length > 0) {
       this.latestDate = this.EventsGrid[0].eventDate;
       this.remainingTime = new Date(this.latestDate);
-      return formatDate(this.latestDate, 'EEEE d MMMM y', 'en_US') +' => '+ this.EventsGrid[0].eventName ;
+      return formatDate(this.latestDate, 'EEEE d MMMM y', 'en_US') + ' => ' + this.EventsGrid[0].eventName;
     }
-    else{
+    else {
       this.remainingTime = null;
       return "No Upcoming Events!"
     }
@@ -139,32 +142,38 @@ export class OrganizerComponent implements OnInit {
   }
 
   endTimeValidator() {
-    if(this.event.EventStartTime < this.event.EventEndTime)
+    if (this.event.EventStartTime < this.event.EventEndTime)
       return false;
-    else if(this.event.EventStartTime == null || this.event.EventEndTime == null)
+    else if (this.event.EventStartTime == null || this.event.EventEndTime == null)
       return false;
-    else
+    else {
       return true;
+    }
   }
 
   dateValidator() {
     this.latestDate = new Date();
     this.latestDate.setDate(this.latestDate.getDate() - 1);
-    if( this.latestDate < this.event.EventDate)
+    if (this.latestDate < this.event.EventDate)
       return false;
-    else
+    else if (this.event.EventDate == null)
+      return false;
+    else {
       return true;
+    }
+
   }
 
   eventExpirer() {
     this.latestDate = new Date();
     this.latestDate.setDate(this.latestDate.getDate() - 1);
 
-    if(this.EventsGrid.length > 0) {
-      if( this.latestDate > this.EventsGrid[0].eventDate)
-      this.deleteRow(this.EventsGrid[0]);
+    if (this.EventsGrid.length > 0) {
+      if (this.latestDate > this.EventsGrid[0].eventDate) {
+        this.deleteRow(this.EventsGrid[0]);
+        this.toast.info('event Expirer triggered!');
+      }
+
     }
   }
-
-   
 }

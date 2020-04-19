@@ -23,7 +23,7 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                     <div class="error" *ngIf="dateValidator()">
-                        You can't add events to the past.past is past- move on - be happy!
+                        You can't add events to the past.past is past - move on - be happy!
                     </div>
                 </mat-form-field>
 
@@ -50,7 +50,7 @@
 
                 <div class="button-row">
                     <button mat-raised-button color="primary" (click)=AddDetails()
-                        [disabled]="!event.EventDate || !event.EventName || !event.EventStartTime || !event.EventEndTime || endTimeValidator()">
+                        [disabled]="!event.EventDate || !event.EventName || !event.EventStartTime || !event.EventEndTime || endTimeValidator() || dateValidator()">
                         <mat-icon>save</mat-icon>
                         {{buttonVal}}
                     </button>
@@ -78,7 +78,7 @@
 
         <mat-form-field appearance="outline">
             <mat-label>Search Event</mat-label>
-            <input matInput placeholder="Search By Event Name" [(ngModel)]='event.EventSearch'
+            <input matInput placeholder="Search By Event Name" [(ngModel)]='event.EventSearch' 
                 (ngModelChange)="applyFilter()">
         </mat-form-field>
 
@@ -138,10 +138,5 @@
 
 
     </mat-card>
-
-
-    <!-- <li>
-            {{event.eventDate | date:'EEEE d MMMM y'}} -- {{event.eventName}} 
-        </li> -->
 
 </div>

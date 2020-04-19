@@ -25,6 +25,7 @@ import { MatTabsModule } from '@angular/material';
 import { MatNativeDateModule } from '@angular/material';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { CountdownTimerModule } from 'ngx-countdown-timer';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { CountdownTimerModule } from 'ngx-countdown-timer';
     MatTabsModule,
     MatNativeDateModule,
     MatChipsModule,
-    CountdownTimerModule.forRoot()
+    CountdownTimerModule.forRoot(),
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
